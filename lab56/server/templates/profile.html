@@ -1,0 +1,22 @@
+<!-- templates/profile.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h1 class="title">
+      Welcome, {{ user.first_name }} {{ user.last_name }}!
+    </h1>
+    <div class="box">
+      <div class="field">
+        Login: {{ user.login }}
+      </div>
+      <div class="field">
+        Email: {{ user.email }}
+      </div>
+      <div class="field">
+        Phone: {{ user.phone_number }}
+      </div>
+  </div>
+</div>
+{% endblock %}

@@ -14,6 +14,7 @@ class Config(object):
         self.DB_SALT = DB_SALT
 
 app = Flask(__name__)
+app.secret_key = "\xf9'\xe4p(\xa9\x12\x1a!\x94\x8d\x1c\x99l\xc7\xb7e\xc7c\x86\x02MJ\xa0"
 app.config.from_object(Config("app.db"))
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

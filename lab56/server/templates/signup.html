@@ -1,0 +1,96 @@
+<!-- templates/signup.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Sign Up</h3>
+    <div class="box">
+        <form method="POST" action="/register" id="reg_form" class="form">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="login" placeholder="Login" autofocus="" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="first_name" placeholder="First Name" autofocus="" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="last_name" placeholder="Last Name" autofocus="">
+                </div>
+            </div>
+
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password" placeholder="Password" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="number" name="phone_number" placeholder="Phone" autofocus="">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
+        </form>
+    </div>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function(){ 
+            const reg_form = document.getElementById("reg_form");
+            
+
+            const check_pass = (password) => {
+                if (!password.match(/[a-z]+/)) {
+                    alert("Password must contain at least 1 lowercase letter.");
+                    return false;
+                }
+                if (!password.match(/[A-Z]+/)) {
+                    alert("Password must contain at least 1 uppercase letter.");
+                    return false;
+                }
+                if (!password.match(/[0-9]+/)) {
+                    alert("Password must contain at least 1 number.");
+                    return false;
+                }
+                if (!password.match(/[$@#&!]+/)) {
+                    alert("Password must contain at least 1 spesial sign '$@#&!'.");
+                    return false;
+                }
+                if (password.length < 8){
+                    alert("Password must be at least 8 chars long.");
+                    return false;
+                }
+                return true;
+            }
+
+            const add_on_submit = (f) => {
+                f.addEventListener("submit", function(e){
+                    if(!check_pass(reg_form.password.value)){
+                        e.preventDefault();
+                        return;    //stop form from submitting
+                    }
+                    const ui_salt = ":Nq4_X:pU*eEc18`eL:s@tM_#XM)_sh%@;";
+                    reg_form.password.value = sha256(ui_salt + reg_form.password.value);
+                })
+            }
+
+            add_on_submit(reg_form);
+        });
+        
+    </script>
+</div>
+{% endblock %}

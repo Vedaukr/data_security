@@ -2,34 +2,36 @@ from flask import request, abort, jsonify
 from config import app, db
 from auth import *
 from models import User
+from flask import Blueprint, render_template, session, redirect, url_for
 
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        user_login = request.json["login"]
-        user_password = request.json["password"]
+        user_login = request.form.get("login")
+        user_password = request.form.get("password")
         if user_login is None or user_password is None:
-            jsonify({"error_message": "Username or password is absent."}), 400
+            return redirect_error("Username or password is absent.") 
         
         user = User.query.filter_by(login = user_login).first()
         if user is None:
-            jsonify({"error_message": "User is nor existing."}), 400
+            return redirect_error("User does not exist.") 
 
         if not user.verify_password(user_password):
-            jsonify({"error_message": "Password is not correct."}), 401
+            return redirect_error("Password is not correct.") 
 
         token = encode_auth_token(user_login)
-        return jsonify({"token": str(token)})
+        session["token"] = token
+        return redirect(url_for('show_info'))
 
     except Exception as e:
-        return jsonify({"error_message": e}), 400    
+        return redirect_error(str(e)) 
 
 
 @app.route('/register', methods=['POST'])
 def register():
     try:
-        user_login = request.json["login"]
-        user_password = request.json["password"]
+        user_login = request.form.get("login")
+        user_password = request.form.get("password")
         if user_login is None or user_password is None:
             return jsonify({"error_message": "Username or password is absent."}), 400
         
@@ -39,25 +41,40 @@ def register():
         token = encode_auth_token(user_login)
         user = User(login=user_login)
         user.set_password(user_password)
-        user.set_data(request.json)
+        user.set_data(request.form)
         db.session.add(user)
         db.session.commit()
-        return jsonify({"token": token})
+        session['token'] = token
+        return redirect(url_for('show_info'))
 
     except Exception as e:
-        return jsonify({"error_message": str(e)}), 400    
+        return redirect_error(str(e))
 
 
-@app.route('/show_info', methods=['POST'])
+@app.route('/show_info', methods=['GET'])
 def show_info():
     try:
-        user_token = request.json["token"]
-        user_login = decode_auth_token(user_token)
+        if not session['token']:
+            return redirect(url_for('login'))
+        user_login = decode_auth_token(session['token'])
         user = User.query.filter_by(login = user_login).first()
-        if user is None:
-            return jsonify({"error_message": "User is nor existing."}), 400
-
-        return jsonify(user.to_obj())
-
+        return render_template('profile.html', user=user) 
     except Exception as e:
-        return jsonify({"error_message": str(e)}), 400
+        return redirect_error(str(e))
+    
+@app.route('/register', methods=['GET'])
+def get_register():
+    return render_template('signup.html') 
+
+@app.route('/login', methods=['GET'])
+def get_login():
+    return render_template('login.html') 
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    session['token'] = None
+    return redirect(url_for('login'))
+
+
+def redirect_error(msg):
+    return render_template('error.html', error_message=msg) 

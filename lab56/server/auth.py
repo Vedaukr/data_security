@@ -1,4 +1,4 @@
-import jwt, datetime, bcrypt
+import jwt, datetime
 from config import app
 
 def decode_auth_token(auth_token):

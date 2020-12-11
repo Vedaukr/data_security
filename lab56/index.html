@@ -1,0 +1,51 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lab56</title>
+</head>
+<body>
+    <style>
+        #content{
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #reg, #login, #info{
+            width:500px;
+            height:500px;
+            margin: 10px auto;
+            background-color: bisque;
+        }
+
+        h1{
+            text-align: center;
+        }
+
+        button{
+            display: block;
+            width:100px;
+            height:25px;
+            margin: 5px auto;
+        }
+    </style>
+    <div id="content">
+        <div id="reg">
+            <h1>Register</h1>
+        </div>
+        <div id="login">
+            <h1>Login</h1>
+
+        </div>
+        <div id="info">
+            <h1>Info</h1>
+        </div>
+        <div id="error">
+            <h1 class="error_text"></h1>
+        </div>
+        <button id="reg_button">Register</button>
+        <button id="log_button">Login</button>
+        <button id="logout_button">Logout</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

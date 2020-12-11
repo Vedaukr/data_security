@@ -1,13 +1,13 @@
 from config import db, app
-import bcrypt
+from argon2 import PasswordHasher
 
 DB_SALT = app.config.get('DB_SALT')
+pwd_hasher = PasswordHasher()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(64), index=True)
     password_hash = db.Column(db.String(64), index=True)
-    password_salt = db.Column(db.String(64), index=True)
     first_name = db.Column(db.String(64), index=True)
     last_name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(64), index=True)
@@ -23,14 +23,12 @@ class User(db.Model):
         fields = ["first_name", "last_name", "email", "phone_number"]
         for field in fields:
             if field in data:
-                setattr(self, field, data[field])
+                setattr(self, field, data.get(field))
 
     def set_password(self, password):
-        if not self.password_salt:
-            self.password_salt = bcrypt.gensalt()
-        self.password_hash = bcrypt.hashpw(DB_SALT + password, self.password_salt)
+        self.password_hash = pwd_hasher.hash(DB_SALT + password)
 
     def verify_password(self, password):
-        return self.password_hash == bcrypt.hashpw(DB_SALT + password, self.password_salt) 
+        return pwd_hasher.verify(self.password_hash, DB_SALT + password)
 
 

@@ -1,0 +1,46 @@
+<!-- templates/login.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Login</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/login" id="log_form">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="login" name="login" placeholder="Your Login" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password" placeholder="Your Password" id="password">
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+        </form>
+    </div>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function(){ 
+            const log_form = document.getElementById("log_form");
+            const add_on_submit = (f) => {
+                f.addEventListener("submit", function(e){
+                    const ui_salt = ":Nq4_X:pU*eEc18`eL:s@tM_#XM)_sh%@;";
+                    log_form.password.value = sha256(ui_salt + log_form.password.value);
+                })
+            }
+            add_on_submit(log_form);
+        });
+        
+    </script>
+</div>
+{% endblock %}
