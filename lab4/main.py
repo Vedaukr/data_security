@@ -29,9 +29,9 @@ SHA1_PATH = '.\\hash_data\\sha1.csv'
 BCRYPT_PATH = '.\\hash_data\\bcrypt.csv'
 
 hashers = [
-    #MD5Hasher(MD5_PATH, get_password),
+    MD5Hasher(MD5_PATH, get_password),
     SHA1Hasher(SHA1_PATH, get_password),
-    #BcryptHasher(BCRYPT_PATH, get_password)
+    BcryptHasher(BCRYPT_PATH, get_password)
 ]
 
 for hasher in hashers:
