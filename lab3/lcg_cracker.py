@@ -1,12 +1,11 @@
-class LCGCracker():
+from abstract_cracker import AbstractCraker
+
+class LCGCracker(AbstractCraker):
     ADJUST = 2 << 30
     MODULUS = 2 << 31
     GEN_TYPE = "Lcg"
     a = 1664525
     c = 1013904223
-
-    def __init__(self, client):
-        self.client = client
 
     def crack(self):
         """
@@ -26,18 +25,16 @@ class LCGCracker():
             is_winning, _, money = self.client.make_bet(self.GEN_TYPE, cur_value, 500)
         """
         cur_value = 1
-        is_winning, num, money = self.client.make_bet(self.GEN_TYPE, cur_value, 1)
+        is_winning, num, _ = self.client.make_bet(self.GEN_TYPE, cur_value, 1)
         if not is_winning:
             cur_value = int(num)
 
-        is_winning = True
-        while money < 1000000 and is_winning:
-            cur_value = self.get_next(cur_value, self.a, self.c)
-            is_winning, num, money = self.client.make_bet(self.GEN_TYPE, cur_value, 100)
-        
-        print(self.client.account_id, money)
+        self.win_casino(cur_value)
 
-    def get_next(self, current, a, c):
+    def get_next(self, current):
+        return self._get_next(current, self.a, self.c)
+
+    def _get_next(self, current, a, c):
         next_value = (a*current + c) % self.MODULUS
         if next_value > self.ADJUST:
             next_value -= self.MODULUS

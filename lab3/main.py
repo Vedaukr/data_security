@@ -1,5 +1,6 @@
 from http_client import HttpClient
 from lcg_cracker import LCGCracker
+from mt_cracker import MtCracker
 
 config = {
     "create_acc_url": "http://95.217.177.249/casino/createacc",
@@ -8,4 +9,5 @@ config = {
 }
 
 client = HttpClient(config)
-LCGCracker(client).crack()
+#LCGCracker(client).crack()
+MtCracker(client).crack()

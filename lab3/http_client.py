@@ -1,9 +1,9 @@
 import requests 
 import random
-
+import datetime
 #r = requests.get(url = URL, params = PARAMS) 
 
-GEN_TYPES = ['Lcg']
+GEN_TYPES = ['Lcg', 'Mt']
 
 class HttpClient():
 
@@ -33,7 +33,7 @@ class HttpClient():
 
         url = self.url.format(gen_type)
         result = requests.get(url=url, params=params).json()
-        return self._is_win_message(result['message']), result['realNumber'], result['account']['money']
+        return self._is_win_message(result['message']), result['realNumber'], result['account']
 
     def _is_win_message(self, message):
         return message != "You lost this time"
