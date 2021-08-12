@@ -1,5 +1,5 @@
 import re
-
+#test
 def encrypt_xor(msg, key):
     binary = bytes(msg, encoding='ascii')
     return bytes(map(lambda c: c ^ key, binary))
